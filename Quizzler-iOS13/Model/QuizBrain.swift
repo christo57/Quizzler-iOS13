@@ -1,20 +1,14 @@
 //
-//  ViewController.swift
+//  QuizBrain.swift
 //  Quizzler-iOS13
 //
-//  Created by Angela Yu on 12/07/2019.
-//  Copyright © 2019 The App Brewery. All rights reserved.
+//  Created by Christopher Klein on 12/06/2020.
+//  Copyright © 2020 The App Brewery. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
-class ViewController: UIViewController {
-    
-    @IBOutlet weak var trueButton: UIButton!
-    @IBOutlet weak var falseButton: UIButton!
-    @IBOutlet weak var questionLabel: UILabel!
-    @IBOutlet weak var progressBar: UIProgressView!
-    
+struct QuizBrain {
     let quiz = [
         Question(q: "A slug's blood is green.", a: "True"),
         Question(q: "Approximately one quarter of human bones are in the feet.", a: "True"),
@@ -28,41 +22,41 @@ class ViewController: UIViewController {
         Question(q: "The loudest sound produced by any animal is 188 decibels. That animal is the African Elephant.", a: "False"),
         Question(q: "No piece of square dry paper can be folded in half more than 7 times.", a: "False"),
         Question(q: "Chocolate affects a dog's heart and nervous system; a few ounces are enough to kill a small dog.", a: "True")
-
+        
     ]
     
-    var element: (key: String, value: Bool)?
     var questionNumber = 0
+    var score = 0
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setQuestion()
-    }
-
-    @IBAction func answerButtonPressed(_ sender: UIButton) {
-        
-        if sender.currentTitle == quiz[questionNumber].answer {
-            print("true answer.")
-            sender.backgroundColor = UIColor.green
+    mutating func answerQuestion(_ userAnswer: String) -> Bool{
+        if userAnswer == quiz[questionNumber].answer {
+            score += 1
+            return true
         } else {
-            print("false answer.")
-            sender.backgroundColor = UIColor.red
+            return false
         }
-        
+    }
+    
+    func getProgress() -> Float {
+        return Float(questionNumber) / Float(quiz.count)
+    }
+    
+    func getQuestionText() -> String {
+        return quiz[questionNumber].text
+    }
+    
+    mutating func nextQuestion(){
         questionNumber += 1
         
         if questionNumber >= quiz.count {
             questionNumber = 0
+            score = 0
         }
-        
-        setQuestion()
     }
     
-    func setQuestion(){
-        questionLabel.text = quiz[questionNumber].text
-        trueButton.backgroundColor = UIColor.clear
-        falseButton.backgroundColor = UIColor.clear
+    func getScore() -> Int {
+        return score
     }
+    
     
 }
-
